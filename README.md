@@ -8,4 +8,6 @@ You will also need to install the dataclasses library which arcade needs
 > pip3 install dataclasses
 
 ### enjoy!
-just run the new_client.py file. The game is a work in progress so I'll be adding changes to it every once in a while
+just run the new_client.py file. The game is a work in progress so I'll be adding changes to it every once in a while.
+
+This is also my first time working with github so I'm still trying to figure it all out.
