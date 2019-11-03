@@ -34,6 +34,7 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+GREY = (186, 186, 186)
 food_color = (110, 158, 255)
 
 
@@ -91,15 +92,6 @@ class MyGame(arcade.Window):
 
         # Clear the screen to the background color
         arcade.start_render()
-
-        # Draw our sprites
-        #self.wall_list.draw()
-        #self.coin_list.draw()
-        #self.player_list.draw()
-        arcade.draw_rectangle_filled(SCREEN_WIDTH/2, 100, SCREEN_WIDTH, 200, GREEN)
-        arcade.draw_rectangle_filled(100, 100, 200, SCREEN_HEIGHT, GREEN)
-        arcade.draw_rectangle_filled(SCREEN_WIDTH - 100, 100, 200, SCREEN_HEIGHT, GREEN)
-        arcade.draw_rectangle_filled(100, SCREEN_HEIGHT - 100, SCREEN_WIDTH, 200, GREEN)
 
         arcade.draw_rectangle_filled(self.x, self.y, self.square_width, self.square_height, self.square_color)
         print(self.x, self.y)
