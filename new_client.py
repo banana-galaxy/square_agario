@@ -79,9 +79,12 @@ class Game(arcade.Window):
         self.yes = False
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.map_width = 3000
+        self.map_height = 3000
+        self.pause = False
         for i in range(50):
-            food_x = random.randint(50, screen_width-50)
-            food_y = random.randint(50, screen_height-50)
+            food_x = random.randint(50, self.map_width-50)
+            food_y = random.randint(50, self.map_height-50)
             self.food.append([food_x, food_y])
 
         arcade.set_background_color(arcade.csscolor.WHITE)
@@ -144,6 +147,14 @@ class Game(arcade.Window):
         """
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.square_color = BLACK
+
+    def on_key_press(self, key, modifiers):
+        """ Called whenever the user presses a key. """
+        if key == arcade.key.P:
+            if self.pause:
+                self.pause = False
+            else:
+                self.pause = True
 
     def wall_collide(self):
         if self.x > self.screen_width - self.square_width/2:
@@ -217,38 +228,39 @@ class Game(arcade.Window):
 
     def on_update(self, delta_time: float):
         # square moving logic
-        distance_x = self.mouse_x - self.x
-        distance_y = self.mouse_y - self.y
-        new_speed_x = distance_x / 50.0
-        new_speed_y = distance_y / 50.0
-        speed_change_x = new_speed_x - self.previous_speed_x
-        speed_change_y = new_speed_y - self.previous_speed_y
-        speed_x = self.previous_speed_x + (speed_change_x * 0.03)
-        speed_y = self.previous_speed_y + (speed_change_y * 0.03)
+        if not self.pause:
+            distance_x = self.mouse_x - self.x
+            distance_y = self.mouse_y - self.y
+            new_speed_x = distance_x / 50.0
+            new_speed_y = distance_y / 50.0
+            speed_change_x = new_speed_x - self.previous_speed_x
+            speed_change_y = new_speed_y - self.previous_speed_y
+            speed_x = self.previous_speed_x + (speed_change_x * 0.03)
+            speed_y = self.previous_speed_y + (speed_change_y * 0.03)
 
-        if speed_y > self.speed_limit:
-            speed_y = self.speed_limit
-        elif speed_y < -self.speed_limit:
-            speed_y = -self.speed_limit
+            if speed_y > self.speed_limit:
+                speed_y = self.speed_limit
+            elif speed_y < -self.speed_limit:
+                speed_y = -self.speed_limit
 
-        if speed_x > self.speed_limit:
-            speed_x = self.speed_limit
-        elif speed_x < -self.speed_limit:
-            speed_x = -self.speed_limit
+            if speed_x > self.speed_limit:
+                speed_x = self.speed_limit
+            elif speed_x < -self.speed_limit:
+                speed_x = -self.speed_limit
 
-        #print (speed_x, speed_y)
+            #print (speed_x, speed_y)
 
-        self.previous_speed_x = speed_x
-        self.previous_speed_y = speed_y
+            self.previous_speed_x = speed_x
+            self.previous_speed_y = speed_y
 
-        self.x = speed_x + self.x
-        self.y = speed_y + self.y
+            self.x = speed_x + self.x
+            self.y = speed_y + self.y
 
-        self.wall_collide()
-        self.food_screen_range()
-        self.eat_food()
-        self.total_time = self.total_time + delta_time
-        '''print("time:", self.total_time)
+            self.wall_collide()
+            self.food_screen_range()
+            self.eat_food()
+        '''self.total_time = self.total_time + delta_time
+        print("time:", self.total_time)
         test = int(self.total_time%5)
         if test == 0:
             self.yes = True
