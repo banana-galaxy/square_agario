@@ -81,6 +81,9 @@ class Game(arcade.Window):
         self.screen_height = screen_height
         self.map_width = 3000
         self.map_height = 3000
+        self.map_location_x = 0
+        self.map_location_y = 0
+        self.border_thickness = 3000
         self.pause = False
         for i in range(50):
             food_x = random.randint(50, self.map_width-50)
@@ -103,7 +106,7 @@ class Game(arcade.Window):
 
             print(f"Window resized to: {width}, {height}")
 
-    def food_screen_range(self):
+    '''def food_screen_range(self):
             for i in range(len(self.food)):
                 if self.food[i][0] > self.screen_width:
                     self.food.remove(self.food[i])
@@ -114,7 +117,7 @@ class Game(arcade.Window):
                     self.food.remove(self.food[i])
                     fod_x = random.randrange(self.screen_width)
                     fod_y = random.randrange(self.screen_height)
-                    self.food.append([fod_x, fod_y])
+                    self.food.append([fod_x, fod_y])'''
 
     def on_draw(self):
         """ Render the screen. """
@@ -122,10 +125,16 @@ class Game(arcade.Window):
         # Clear the screen to the background color
         arcade.start_render()
 
-        arcade.draw_rectangle_filled(self.x, self.y, self.square_width, self.square_height, self.square_color)
+        arcade.draw_rectangle_filled(self.map_width / 2 - self.x, -self.border_thickness/2 - self.y, self.map_width*2, self.border_thickness, GREY)
+        arcade.draw_rectangle_filled(self.map_width / 2 - self.x, self.map_height+self.border_thickness/2 - self.y, self.map_width*2, self.border_thickness, GREY)
+        arcade.draw_rectangle_filled(-self.border_thickness/2 - self.x, self.map_height / 2 - self.y, self.border_thickness, self.map_height*2, GREY)
+        arcade.draw_rectangle_filled(self.map_height+self.border_thickness/2 - self.x, self.map_height / 2 - self.y, self.border_thickness, self.map_height*2, GREY)
+
+        arcade.draw_rectangle_filled(self.screen_width/2, self.screen_height/2, self.square_width, self.square_height, self.square_color)
         print(self.x, self.y)
+        print(screen_width/2-self.x, screen_height/2-self.y)
         for i in range(len(self.food)):
-            arcade.draw_rectangle_filled(self.food[i][0], self.food[i][1], self.food_size, self.food_size, food_color)
+            arcade.draw_rectangle_filled(self.food[i][0]-self.x, self.food[i][1]-self.y, self.food_size, self.food_size, food_color)
 
     def on_mouse_motion(self, x, y, dx, dy):
         """ Called to update our objects. Happens approximately 60 times per second."""
@@ -157,14 +166,23 @@ class Game(arcade.Window):
                 self.pause = True
 
     def wall_collide(self):
-        if self.x > self.screen_width - self.square_width/2:
+        if self.x > (self.map_width - self.screen_width/2):
+            self.x = self.map_width - self.screen_width/2
+        elif self.x < 0 - self.screen_width/2:
+            self.x = 0 - self.screen_width/2
+        if self.y > self.map_height - self.screen_height/2:
+            self.y = self.map_height - self.screen_height/2
+        elif self.y < 0 - self.screen_height/2:
+            self.y = 0 - self.screen_height/2
+
+        '''if self.x > self.screen_width - self.square_width/2:
             self.x = self.screen_width - self.square_width/2
         elif self.x < 0 + self.square_width/2:
             self.x = 0 + self.square_width/2
         if self.y > self.screen_height - self.square_height/2:
             self.y = self.screen_height - self.square_height/2
         elif self.y < 0 + self.square_height/2:
-            self.y = 0 + self.square_height/2
+            self.y = 0 + self.square_height/2'''
 
     def food_collide(self):
         square_right_edge = self.x + (self.square_width/2)
@@ -188,16 +206,16 @@ class Game(arcade.Window):
                     self.food.append([fod_x, fod_y])
 
     def eat_food(self):
-        collision = self.collide([[self.x, self.y]], self.square_height, self.food, self.food_size)
+        collision = self.collide([[self.screen_width/2, self.screen_height/2]], self.square_height, self.food, self.food_size)
         if isinstance(collision, list):
             for i in range(len(collision)):
                 self.food.remove(collision[i])
                 self.square_height += 1
                 self.square_width += 1
                 while True:
-                    fod_x = random.randint(50, self.screen_width - 50)
-                    fod_y = random.randint(50, self.screen_height - 50)
-                    collided = self.object_collide([self.x, self.y], self.square_height, [fod_x, fod_y], self.food_size)
+                    fod_x = random.randint(50, self.map_width - 50)
+                    fod_y = random.randint(50, self.map_height - 50)
+                    collided = self.object_collide([self.screen_width/2, self.screen_height/2], self.square_height, [fod_x, fod_y], self.food_size)
                     if collided:
                         continue
                     else:
@@ -209,8 +227,8 @@ class Game(arcade.Window):
         collided = False
         for coord1 in range(len(coordinates1)):
             for coord2 in range(len(coordinates2)):
-                if coordinates1[coord1][0] + coordinates1_size/2 >= coordinates2[coord2][0] - coordinates2_size/2 and coordinates1[coord1][0] - coordinates1_size/2 <= coordinates2[coord2][0] + coordinates2_size/2:
-                    if coordinates1[coord1][1] + coordinates1_size/2 >= coordinates2[coord2][1] - coordinates2_size/2 and coordinates1[coord1][1] - coordinates1_size/2 <= coordinates2[coord2][1] + coordinates2_size/2:
+                if coordinates1[coord1][0] + coordinates1_size/2 >= (coordinates2[coord2][0]-self.x) - coordinates2_size/2 and coordinates1[coord1][0] - coordinates1_size/2 <= (coordinates2[coord2][0]-self.x) + coordinates2_size/2:
+                    if coordinates1[coord1][1] + coordinates1_size/2 >= (coordinates2[coord2][1]-self.y) - coordinates2_size/2 and coordinates1[coord1][1] - coordinates1_size/2 <= (coordinates2[coord2][1]-self.y) + coordinates2_size/2:
                         collided_with.append(coordinates2[coord2])
                         collided = True
         if collided:
@@ -219,8 +237,8 @@ class Game(arcade.Window):
             return False
 
     def object_collide(self, coordinates1: list, coordinates1_size: int, coordinates2: list, coordinates2_size: int):
-        if coordinates1[0] + coordinates1_size / 2 >= coordinates2[0] - coordinates2_size / 2 and coordinates1[0] - coordinates1_size / 2 <= coordinates2[0] + coordinates2_size / 2:
-            if coordinates1[1] + coordinates1_size / 2 >= coordinates2[1] - coordinates2_size / 2 and coordinates1[1] - coordinates1_size / 2 <= coordinates2[1] + coordinates2_size / 2:
+        if coordinates1[0] + coordinates1_size / 2 >= (coordinates2[0]-self.x) - coordinates2_size / 2 and coordinates1[0] - coordinates1_size / 2 <= (coordinates2[0]-self.x) + coordinates2_size / 2:
+            if coordinates1[1] + coordinates1_size / 2 >= (coordinates2[1]-self.y) - coordinates2_size / 2 and coordinates1[1] - coordinates1_size / 2 <= (coordinates2[1]-self.y) + coordinates2_size / 2:
                 return True
             else:
                 return False
@@ -229,8 +247,8 @@ class Game(arcade.Window):
     def on_update(self, delta_time: float):
         # square moving logic
         if not self.pause:
-            distance_x = self.mouse_x - self.x
-            distance_y = self.mouse_y - self.y
+            distance_x = self.mouse_x - self.screen_width/2
+            distance_y = self.mouse_y - self.screen_height/2
             new_speed_x = distance_x / 50.0
             new_speed_y = distance_y / 50.0
             speed_change_x = new_speed_x - self.previous_speed_x
@@ -255,9 +273,8 @@ class Game(arcade.Window):
 
             self.x = speed_x + self.x
             self.y = speed_y + self.y
-
             self.wall_collide()
-            self.food_screen_range()
+            #self.food_screen_range()
             self.eat_food()
         '''self.total_time = self.total_time + delta_time
         print("time:", self.total_time)
