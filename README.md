@@ -10,6 +10,6 @@ You will also need to install the dataclasses library which arcade needs
 ### enjoy!
 just run the new_client.py file. The game is a work in progress so I'll be adding changes to it every once in a while.
 
-The game will freeze if your square gets really close to the window size. It's "normal" as in that's exactly how it's intended to be because I have not finished that part completely yet so the game doesn't freeze. Basically it's a known bug, and will be fixed.
+The game will freeze if your square gets really close to the map size. It's "normal" as in that's exactly how it's intended to be because I have not finished that part completely yet so the game doesn't freeze. Basically it's a known bug, and will be fixed.
 
 This is also my first time working with github so I'm still trying to figure it all out.
