@@ -1,11 +1,11 @@
 # square_agario
 
-arcade requires python 3 to be run
+### installing everything you need to run the game
+You can see installation instructions here: <http://arcade.academy/installation.html>
+<br>The website is also **the** main arcade website and it's amazing
 
-I work on this from ubuntu and these commands did it for me:
-<br>sudo apt-get install python3
-<br>sudo apt-get install python3-pip
-<br>pip3 install arcade
-<br>pip3 install dataclasses
+You will also need to install the dataclasses library which arcade needs
+> pip3 install dataclasses
 
-it didn't work for me untill I installed the dataclasses
+### enjoy!
+just run the new_client.py file. The game is a work in progress so I'll be adding changes to it every once in a while
