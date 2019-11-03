@@ -131,8 +131,8 @@ class Game(arcade.Window):
         arcade.draw_rectangle_filled(self.map_height+self.border_thickness/2 - self.x, self.map_height / 2 - self.y, self.border_thickness, self.map_height*2, GREY)
 
         arcade.draw_rectangle_filled(self.screen_width/2, self.screen_height/2, self.square_width, self.square_height, self.square_color)
-        print(self.x, self.y)
-        print(screen_width/2-self.x, screen_height/2-self.y)
+        #print(self.x, self.y)
+        #print(screen_width/2-self.x, screen_height/2-self.y)
         for i in range(len(self.food)):
             arcade.draw_rectangle_filled(self.food[i][0]-self.x, self.food[i][1]-self.y, self.food_size, self.food_size, food_color)
 
