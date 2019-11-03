@@ -26,9 +26,9 @@ Platformer Game
 import arcade, random
 
 # Constants
-SCREEN_WIDTH = 2000
-SCREEN_HEIGHT = 2000
-SCREEN_TITLE = "squareio migrating"
+screen_width = 1000
+screen_height = 1000
+SCREEN_TITLE = "squareio arcade"
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -44,7 +44,7 @@ TILE_SCALING = 0.5
 COIN_SCALING = 0.5
 
 
-class MyGame(arcade.Window):
+class Game(arcade.Window):
     """
     Main application class.
     """
@@ -52,7 +52,7 @@ class MyGame(arcade.Window):
     def __init__(self):
 
         # Call the parent class and set up the window
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        super().__init__(screen_width, screen_height, SCREEN_TITLE, resizable=True)
 
         # These are 'lists' that keep track of our sprites. Each sprite should
         # go into a list.
@@ -77,15 +77,41 @@ class MyGame(arcade.Window):
         self.food_size = 10
         self.total_time = 0.0
         self.yes = False
+        self.screen_width = screen_width
+        self.screen_height = screen_height
         for i in range(50):
-            food_x = random.randint(50, SCREEN_WIDTH-50)
-            food_y = random.randint(50, SCREEN_HEIGHT-50)
+            food_x = random.randint(50, screen_width-50)
+            food_y = random.randint(50, screen_height-50)
             self.food.append([food_x, food_y])
 
         arcade.set_background_color(arcade.csscolor.WHITE)
 
     def setup(self):
         pass
+
+    def on_resize(self, width, height):
+            """ This method is automatically called when the window is resized. """
+
+            # Call the parent. Failing to do this will mess up the coordinates, and default to 0,0 at the center and the
+            # edges being -1 to 1.
+            super().on_resize(width, height)
+            self.screen_width = width
+            self.screen_height = height
+
+            print(f"Window resized to: {width}, {height}")
+
+    def food_screen_range(self):
+            for i in range(len(self.food)):
+                if self.food[i][0] > self.screen_width:
+                    self.food.remove(self.food[i])
+                    fod_x = random.randrange(self.screen_width)
+                    fod_y = random.randrange(self.screen_height)
+                    self.food.append([fod_x, fod_y])
+                if self.food[i][1] > self.screen_height:
+                    self.food.remove(self.food[i])
+                    fod_x = random.randrange(self.screen_width)
+                    fod_y = random.randrange(self.screen_height)
+                    self.food.append([fod_x, fod_y])
 
     def on_draw(self):
         """ Render the screen. """
@@ -120,12 +146,12 @@ class MyGame(arcade.Window):
             self.square_color = BLACK
 
     def wall_collide(self):
-        if self.x > SCREEN_WIDTH - self.square_width/2:
-            self.x = SCREEN_WIDTH - self.square_width/2
+        if self.x > self.screen_width - self.square_width/2:
+            self.x = self.screen_width - self.square_width/2
         elif self.x < 0 + self.square_width/2:
             self.x = 0 + self.square_width/2
-        if self.y > SCREEN_HEIGHT - self.square_height/2:
-            self.y = SCREEN_HEIGHT - self.square_height/2
+        if self.y > self.screen_height - self.square_height/2:
+            self.y = self.screen_height - self.square_height/2
         elif self.y < 0 + self.square_height/2:
             self.y = 0 + self.square_height/2
 
@@ -158,8 +184,8 @@ class MyGame(arcade.Window):
                 self.square_height += 1
                 self.square_width += 1
                 while True:
-                    fod_x = random.randint(50, SCREEN_WIDTH - 50)
-                    fod_y = random.randint(50, SCREEN_HEIGHT - 50)
+                    fod_x = random.randint(50, self.screen_width - 50)
+                    fod_y = random.randint(50, self.screen_height - 50)
                     collided = self.object_collide([self.x, self.y], self.square_height, [fod_x, fod_y], self.food_size)
                     if collided:
                         continue
@@ -219,6 +245,7 @@ class MyGame(arcade.Window):
         self.y = speed_y + self.y
 
         self.wall_collide()
+        self.food_screen_range()
         self.eat_food()
         self.total_time = self.total_time + delta_time
         '''print("time:", self.total_time)
@@ -233,7 +260,7 @@ class MyGame(arcade.Window):
 
 def main():
     """ Main method """
-    window = MyGame()
+    window = Game()
     window.setup()
     arcade.run()
 
