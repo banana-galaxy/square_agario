@@ -16,7 +16,7 @@ The game will freeze if your square gets really close to the map size. It's "nor
 <br>Another known bug is that the square changes its position on the map when you resize the window.
 
 #### discord
-I created a discord server for this game just for fun, your welcome to join if you want: <https://discord.gg/q3eVxNQ>
+I created a discord server for this game just for fun, you're welcome to join if you want: <https://discord.gg/q3eVxNQ>
 
 #### some other info
 This is also my first time working with github so I'm still trying to figure it all out.
